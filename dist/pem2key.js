@@ -41,10 +41,10 @@ function ensureString(string) {
 }
 
 // pem2key.js
-import { Base64 } from "npm:@lapo/asn1js/base64.js";
-import { ASN1 } from "npm:@lapo/asn1js";
-import { Defs } from "npm:@lapo/asn1js/defs.js";
-import * as jose from "npm:jose";
+import { Base64 } from "npm:@lapo/asn1js@2.0.4/base64.js";
+import { ASN1 } from "npm:@lapo/asn1js@2.0.4";
+import { Defs } from "npm:@lapo/asn1js@2.0.4/defs.js";
+import * as jose from "npm:jose@5.6.3";
 var keyFormats = Object.freeze({
   "PKCS#8": "PKCS#8",
   "PKCS#1": "PKCS#1"

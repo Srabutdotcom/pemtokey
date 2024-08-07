@@ -1,0 +1,10 @@
+{
+   "name": "@aicone/pem2key",
+   "version": "0.1.0",
+   "exports": "./dist/pem2key.js",
+   "publish": {
+    "exclude":[
+      "./src/tools/ensurePem.js"
+    ]
+   }
+ }

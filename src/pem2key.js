@@ -1,8 +1,8 @@
 import { ensurePem, pemTypes } from "./tools/ensurePem.js";
-import { Base64 } from "npm:@lapo/asn1js/base64.js"
-import { ASN1 } from "npm:@lapo/asn1js"
-import { Defs } from "npm:@lapo/asn1js/defs.js"
-import * as jose from 'npm:jose'
+import { Base64 } from "npm:@lapo/asn1js@2.0.4/base64.js"
+import { ASN1 } from "npm:@lapo/asn1js@2.0.4"
+import { Defs } from "npm:@lapo/asn1js@2.0.4/defs.js"
+import * as jose from 'npm:jose@5.6.3'
 
 const keyFormats = Object.freeze({
    'PKCS#8': 'PKCS#8',
@@ -125,4 +125,4 @@ function getUint8(index = 0) {
    }
 }
 
-//`esbuild ./pem2key.js --bundle --format=esm --target=esnext --outfile=../dist/pem2key.js --external:npm:jose --external:npm:@lapo/*`
+//`esbuild ./pem2key.js --bundle --format=esm --target=esnext --outfile=../dist/pem2key.js --external:npm:jose* --external:npm:@lapo/*`

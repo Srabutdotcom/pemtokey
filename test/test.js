@@ -1,5 +1,5 @@
-import { pem2key } from "../src/pem2key.js"
-import * as jose from 'npm:jose'
+//import { pem2key } from "../src/pem2key.js"
+import { pem2key } from "../dist/pem2key.js"
 
 //*PKCS1
 const RSAPrivateKeyPem = `-----BEGIN RSA PRIVATE KEY-----
