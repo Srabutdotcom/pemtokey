@@ -1,4 +1,3 @@
-```
 ## pemtokey
 
 **pemtokey** is a JavaScript library designed to efficiently parse private key from PEM strings into `CryptoKey` objects, ready for cryptographic operations.
