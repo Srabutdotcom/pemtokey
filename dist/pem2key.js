@@ -49,6 +49,12 @@ var keyFormats = Object.freeze({
   "PKCS#8": "PKCS#8",
   "PKCS#1": "PKCS#1"
 });
+/**
+ * To extract privateKey from Pem string into cryptoKey Object
+ * @param {base64} pem encoded base64 string
+ * @param {256|384|512} hash either 256, 384 or 512
+ * @returns {Promise<CryptoKey>}
+ */
 async function pem2key(pem, hash = 256) {
   pem = ensurePem(pem, pemTypes["(RSA |EC )?PRIVATE KEY"]);
   if ([256, 384, 512].includes(hash) == false)
