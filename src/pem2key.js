@@ -9,7 +9,8 @@ const keyFormats = Object.freeze({
    'PKCS#1': 'PKCS#1',
 })
 
-/*! @preserve
+/**
+ * ! @preserve
  * To extract privateKey from Pem string into cryptoKey Object
  * @param {base64} pem encoded base64 string
  * @param {256|384|512} hash either 256, 384 or 512
@@ -21,7 +22,8 @@ export async function pem2key(pem, hash = 256) {
    const byte = Base64.unarmor(pem);
    const asn1 = ASN1.decode(byte);
    const key = parseKey(asn1);
-   /*! @preserve
+   /**
+    * ! @preserve
     * @type {CryptoKey} type - standard of CryptoKey */
    let cryptoKey
 
