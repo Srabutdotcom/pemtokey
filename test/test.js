@@ -12,7 +12,7 @@ v/Ow5T0q5gIJAiEAyS4RaI9YG8EWx/2w0T67ZUVAw8eOMB6BIUg0Xcu+3okCIBOs
 /5OiPgoTdSy7bcF9IGpSE8ZgGKzgYQVZeN97YE00
 -----END RSA PRIVATE KEY-----`
 
-const PrivateKeyPem = `-----BEGIN PRIVATE KEY-----
+const _PrivateKeyPem = `-----BEGIN PRIVATE KEY-----
 MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCoknaik3X9AwXf
 1nb/BfHlR4RBcij+Ri2RzxZfdcTuhcIL4XLrgwaz/Skx3R/UjU3eoxneBjcGeA7X
 QX75aXMS2FKrfQEJ6mp9AVQTowPC5VkAp8L8vk/cBrckZFHQsm9bHnLirJ6LYhWK
@@ -50,14 +50,14 @@ AQPbE65D
 -----END PRIVATE KEY-----
 `
 
-const ecPem384 = `-----BEGIN PRIVATE KEY-----
+const _ecPem384 = `-----BEGIN PRIVATE KEY-----
 MIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDBMqpu1fyJWXuptimlt
 x7INoLVOVI16BqbNyZcbkF0Tc4jkf6yLg8SuyeHLEAdmHdChZANiAAQ5ajF6xAhM
 1hOM1CczqqQJ0MExaVcUam+ZaQbwvgvHw39S0I2fQAKuGpN0gCXshaR+wFB1TBtB
 BLO4Bl28flhtdLI2XMtk0cPL41bExJkJmYSnFty7+zwWeJwf1ohiD64=
 -----END PRIVATE KEY-----`
 
-const ecPem521 = `-----BEGIN PRIVATE KEY-----
+const _ecPem521 = `-----BEGIN PRIVATE KEY-----
 ABOrkYaelTH9A7QmhhsfIh8xHH1qH6wiraSbxp+zelO5K+xvs5A2yYXIG3NQkVye
 tEkaA7xhMISRTsKnr+XR/sm1
 -----END PRIVATE KEY-----`
@@ -120,7 +120,7 @@ ZWPAgQUUe8NfRLIu0u7lL1cDmwKqFb/Qvc1ImBWQGxZOt8mxs/g8+N8sQhUftVnQ
 j7LSecVYPBKQpDvcAqREQjyd
 -----END PRIVATE KEY-----`
 
-const d = await pem2key(ecPem256); 
-const a = await pem2key(RSAPrivateKeyPem, 512);
-const b = await pem2key(RsaSsaPem,384);
-const c = await pem2key(RsaPssPem);
+const _d = await pem2key(ecPem256); 
+const _a = await pem2key(RSAPrivateKeyPem, 512);
+const _b = await pem2key(RsaSsaPem,384);
+const _c = await pem2key(RsaPssPem);

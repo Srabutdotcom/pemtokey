@@ -32,8 +32,8 @@ async function genRsaKey(type = 'PSS', modLen = 2048, hash = 256) {
 const RsaSsaKey = await genRsaKey('SSA');
 const RsaPssKey = await genRsaKey('PSS');
 
-const RsaSsaPem = await jose.exportPKCS8(RsaSsaKey.privateKey)
-const RsaPssPem = await jose.exportPKCS8(RsaPssKey.privateKey)
+const _RsaSsaPem = await jose.exportPKCS8(RsaSsaKey.privateKey)
+const _RsaPssPem = await jose.exportPKCS8(RsaPssKey.privateKey)
 
 
 

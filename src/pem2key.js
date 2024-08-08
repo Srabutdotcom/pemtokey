@@ -1,3 +1,4 @@
+//! @preserve deno-lint-ignore-no-var-file
 import { ensurePem, pemTypes } from "./tools/ensurePem.js";
 import { Base64 } from "npm:@lapo/asn1js@2.0.4/base64.js"
 import { ASN1 } from "npm:@lapo/asn1js@2.0.4"
@@ -65,7 +66,7 @@ export async function pem2key(pem, hash = 256) {
 }
 
 function extractKey(asn1) {
-   let asn1tocheck = asn1;
+   const asn1tocheck = asn1;
 
    while (true) {
       const types = Defs.commonTypes
@@ -91,8 +92,8 @@ function parseKey(asn1) {
       Defs.match(asn1Object.sub[2].sub[0], Defs.commonTypes[3].type)
       asn1Object.sequence = asn1Object.sub[2].sub[0].sub;
       asn1Object.type = 'PKCS#8'
-      const [oid0, name0, format0] = asn1Object.sub[1].sub[0].content()?.split('\n') ?? [0, 0, 0];
-      const [oid1, name1, format1] = asn1Object.sub[1].sub[1].content()?.split('\n') ?? [0, 0, 0];
+      const [_oid0, name0, _format0] = asn1Object.sub[1].sub[0].content()?.split('\n') ?? [0, 0, 0];
+      const [_oid1, name1, _format1] = asn1Object.sub[1].sub[1].content()?.split('\n') ?? [0, 0, 0];
       asn1Object.alg = name1
       asn1Object.name = name0
    }
@@ -112,7 +113,7 @@ function parseKey(asn1) {
       const values = Array.from(enc.subarray(start, end), e => Number(e).toString(16).padStart(2, '0')).join('');
       //const bint = bigInt(values, 16);
       const _bin = BigInt('0x' + values);
-      return bint
+      return _bin
    }
 }
 
