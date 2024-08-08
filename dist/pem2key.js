@@ -1,5 +1,5 @@
 // ../../aid/ensure/ensurePem.js
-var pemTypes = Object.freeze({
+const pemTypes = Object.freeze({
   "RSA PRIVATE KEY": "RSA PRIVATE KEY",
   "CERTIFICATE": "CERTIFICATE",
   "RSA PUBLIC KEY": "RSA PUBLIC KEY",
@@ -46,7 +46,7 @@ import { ASN1 } from "npm:@lapo/asn1js@2.0.4";
 import { Defs } from "npm:@lapo/asn1js@2.0.4/defs.js";
 import * as jose from "npm:jose@5.6.3";
 //! @preserve deno-lint-ignore-no-var-file
-var keyFormats = Object.freeze({
+const keyFormats = Object.freeze({
   "PKCS#8": "PKCS#8",
   "PKCS#1": "PKCS#1"
 });

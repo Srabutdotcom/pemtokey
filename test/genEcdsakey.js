@@ -1,5 +1,5 @@
 import jwkToPem from 'npm:jwk-to-pem';
-import * as jose from 'npm:jose'
+//import * as jose from 'npm:jose'
 
 const curveBits = Object.freeze({
    256:'P-256',
@@ -29,6 +29,6 @@ async function exportEcKey2Jwk(key){
 
 const ecJwk = await exportEcKey2Jwk(ecKeys.privateKey)
 //const pem2 = await jose.exportPKCS8(ecKeys.privateKey)
-const pem = jwkToPem(ecJwk, {private:true});
+const _pem = jwkToPem(ecJwk, {private:true});
 
 
