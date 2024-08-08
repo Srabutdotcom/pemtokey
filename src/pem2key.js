@@ -9,7 +9,7 @@ const keyFormats = Object.freeze({
    'PKCS#1': 'PKCS#1',
 })
 
-/**
+/*! @preserve
  * To extract privateKey from Pem string into cryptoKey Object
  * @param {base64} pem encoded base64 string
  * @param {256|384|512} hash either 256, 384 or 512
@@ -17,20 +17,25 @@ const keyFormats = Object.freeze({
  */
 export async function pem2key(pem, hash = 256) {
    pem = ensurePem(pem, pemTypes["(RSA |EC )?PRIVATE KEY"])
-   if([256,384,512].includes(hash)==false)throw TypeError(`Invalid hash ${hash}`)
+   if ([256, 384, 512].includes(hash) == false) throw TypeError(`Invalid hash ${hash}`)
    const byte = Base64.unarmor(pem);
    const asn1 = ASN1.decode(byte);
-   const key = parseKey(asn1); 
+   const key = parseKey(asn1);
+   /*! @preserve
+    * @type {CryptoKey} type - standard of CryptoKey */
+   let cryptoKey
 
    if (key.type == keyFormats["PKCS#8"]) {
+      
       if (key.name.includes('ec')) {
-         if (key.alg.includes('384')) return await jose.importPKCS8(pem, 'ES384')
-         if (key.alg.includes('521')) return await jose.importPKCS8(pem, 'ES512')
-         if (key.alg == 'secp256k1') return await jose.importPKCS8(pem, 'ES256K')
-         if (key.alg.includes('256')) return await jose.importPKCS8(pem, 'ES256')
+         if (key.alg.includes('384')) { cryptoKey = await jose.importPKCS8(pem, 'ES384'); return cryptoKey }
+         if (key.alg.includes('521')) { cryptoKey = await jose.importPKCS8(pem, 'ES512'); return cryptoKey }
+         if (key.alg == 'secp256k1') { cryptoKey = await jose.importPKCS8(pem, 'ES256K'); return cryptoKey }
+         if (key.alg.includes('256')) { cryptoKey = await jose.importPKCS8(pem, 'ES256'); return cryptoKey }
          throw TypeError(`Unsupported alg ${key.alg}`)
       }
-      return await jose.importPKCS8(pem, `PS${hash}`)
+      cryptoKey = await jose.importPKCS8(pem, `PS${hash}`)
+      return cryptoKey
    }
    const jwk = {
       kty: 'RSA',
@@ -43,8 +48,8 @@ export async function pem2key(pem, hash = 256) {
       dq: key.getUint8(7).toB64Url(),
       qi: key.getUint8(8).toB64Url()
    }
-
-   return await crypto.subtle.importKey(
+   
+   cryptoKey = await crypto.subtle.importKey(
       'jwk',
       jwk,
       {
@@ -54,6 +59,7 @@ export async function pem2key(pem, hash = 256) {
       true,
       ["sign"]
    )
+   return cryptoKey
 }
 
 function extractKey(asn1) {
@@ -84,7 +90,7 @@ function parseKey(asn1) {
       asn1Object.sequence = asn1Object.sub[2].sub[0].sub;
       asn1Object.type = 'PKCS#8'
       const [oid0, name0, format0] = asn1Object.sub[1].sub[0].content()?.split('\n') ?? [0, 0, 0];
-      const [oid1, name1, format1] = asn1Object.sub[1].sub[1].content()?.split('\n') ?? [0, 0, 0]; 
+      const [oid1, name1, format1] = asn1Object.sub[1].sub[1].content()?.split('\n') ?? [0, 0, 0];
       asn1Object.alg = name1
       asn1Object.name = name0
    }
@@ -103,7 +109,7 @@ function parseKey(asn1) {
       const start = pos + header;
       const values = Array.from(enc.subarray(start, end), e => Number(e).toString(16).padStart(2, '0')).join('');
       //const bint = bigInt(values, 16);
-      const _bin = BigInt('0x' + values); 
+      const _bin = BigInt('0x' + values);
       return bint
    }
 }
@@ -125,5 +131,5 @@ function getUint8(index = 0) {
    }
 }
 
-//`esbuild ./pem2key.js --bundle --format=esm --target=esnext --outfile=../dist/pem2key.js --external:npm:jose* --external:npm:@lapo/*`
+//`esbuild ./pem2key.js --bundle --format=esm --target=esnext --outfile=../dist/pem2key.js --external:npm:jose* --external:npm:@lapo/* --legal-comments=inline`
 // deno publish --allow-dirty

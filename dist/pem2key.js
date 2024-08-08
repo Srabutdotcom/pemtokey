@@ -49,7 +49,7 @@ var keyFormats = Object.freeze({
   "PKCS#8": "PKCS#8",
   "PKCS#1": "PKCS#1"
 });
-/**
+/*! @preserve
  * To extract privateKey from Pem string into cryptoKey Object
  * @param {base64} pem encoded base64 string
  * @param {256|384|512} hash either 256, 384 or 512
@@ -62,19 +62,31 @@ async function pem2key(pem, hash = 256) {
   const byte = Base64.unarmor(pem);
   const asn1 = ASN1.decode(byte);
   const key = parseKey(asn1);
+  /*! @preserve
+   * @type {CryptoKey} type - standard of CryptoKey */
+  let cryptoKey;
   if (key.type == keyFormats["PKCS#8"]) {
     if (key.name.includes("ec")) {
-      if (key.alg.includes("384"))
-        return await jose.importPKCS8(pem, "ES384");
-      if (key.alg.includes("521"))
-        return await jose.importPKCS8(pem, "ES512");
-      if (key.alg == "secp256k1")
-        return await jose.importPKCS8(pem, "ES256K");
-      if (key.alg.includes("256"))
-        return await jose.importPKCS8(pem, "ES256");
+      if (key.alg.includes("384")) {
+        cryptoKey = await jose.importPKCS8(pem, "ES384");
+        return cryptoKey;
+      }
+      if (key.alg.includes("521")) {
+        cryptoKey = await jose.importPKCS8(pem, "ES512");
+        return cryptoKey;
+      }
+      if (key.alg == "secp256k1") {
+        cryptoKey = await jose.importPKCS8(pem, "ES256K");
+        return cryptoKey;
+      }
+      if (key.alg.includes("256")) {
+        cryptoKey = await jose.importPKCS8(pem, "ES256");
+        return cryptoKey;
+      }
       throw TypeError(`Unsupported alg ${key.alg}`);
     }
-    return await jose.importPKCS8(pem, `PS${hash}`);
+    cryptoKey = await jose.importPKCS8(pem, `PS${hash}`);
+    return cryptoKey;
   }
   const jwk = {
     kty: "RSA",
@@ -87,7 +99,7 @@ async function pem2key(pem, hash = 256) {
     dq: key.getUint8(7).toB64Url(),
     qi: key.getUint8(8).toB64Url()
   };
-  return await crypto.subtle.importKey(
+  cryptoKey = await crypto.subtle.importKey(
     "jwk",
     jwk,
     {
@@ -97,6 +109,7 @@ async function pem2key(pem, hash = 256) {
     true,
     ["sign"]
   );
+  return cryptoKey;
 }
 function extractKey(asn1) {
   let asn1tocheck = asn1;
