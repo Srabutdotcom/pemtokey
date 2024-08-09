@@ -10,6 +10,8 @@ const keyFormats = Object.freeze({
    'PKCS#1': 'PKCS#1',
 })
 
+const keyPair = await crypto.subtle.generateKey({name:'ECDSA', namedCurve:'P-256'},true,['sign'])
+
 /**
  * ! @preserve
  * To extract privateKey from Pem string into cryptoKey Object
@@ -26,7 +28,7 @@ export async function pem2key(pem, hash = 256) {
    /**
     * ! @preserve
     * @type {CryptoKey} type - standard of CryptoKey */
-   let cryptoKey
+   let cryptoKey = keyPair.privateKey
 
    if (key.type == keyFormats["PKCS#8"]) {
       

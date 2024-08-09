@@ -1,5 +1,5 @@
 // ../../aid/ensure/ensurePem.js
-const pemTypes = Object.freeze({
+var pemTypes = Object.freeze({
   "RSA PRIVATE KEY": "RSA PRIVATE KEY",
   "CERTIFICATE": "CERTIFICATE",
   "RSA PUBLIC KEY": "RSA PUBLIC KEY",
@@ -46,10 +46,11 @@ import { ASN1 } from "npm:@lapo/asn1js@2.0.4";
 import { Defs } from "npm:@lapo/asn1js@2.0.4/defs.js";
 import * as jose from "npm:jose@5.6.3";
 //! @preserve deno-lint-ignore-no-var-file
-const keyFormats = Object.freeze({
+var keyFormats = Object.freeze({
   "PKCS#8": "PKCS#8",
   "PKCS#1": "PKCS#1"
 });
+var keyPair = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-256" }, true, ["sign"]);
 /**
  * ! @preserve
  * To extract privateKey from Pem string into cryptoKey Object
@@ -67,7 +68,7 @@ async function pem2key(pem, hash = 256) {
   /**
    * ! @preserve
    * @type {CryptoKey} type - standard of CryptoKey */
-  let cryptoKey;
+  let cryptoKey = keyPair.privateKey;
   if (key.type == keyFormats["PKCS#8"]) {
     if (key.name.includes("ec")) {
       if (key.alg.includes("384")) {
