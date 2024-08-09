@@ -135,4 +135,4 @@ function getUint8(index = 0) {
 }
 
 //`esbuild ./pem2key.js --bundle --format=esm --target=esnext --outfile=../dist/pem2key.js --external:npm:jose* --external:npm:@lapo/* --legal-comments=inline`
-// deno publish --allow-dirty
+// deno publish --allow-dirty --allow-slow-types
