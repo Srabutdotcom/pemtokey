@@ -1,6 +1,6 @@
 {
    "name": "@aicone/pem2key",
-   "version": "0.1.6",
+   "version": "0.1.7",
    "exports": "./dist/pem2key.js",
    "publish": {
     "exclude":[
