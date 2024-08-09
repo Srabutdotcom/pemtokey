@@ -58,7 +58,7 @@ var keyPair = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-25
  * @param {256|384|512} hash either 256, 384 or 512
  * @returns {Promise<CryptoKey>}
  */
-async function pem2key(pem, hash = 256) {
+async function pem2key(pem, hash = 256):Promise<CryptoKey> {
   pem = ensurePem(pem, pemTypes["(RSA |EC )?PRIVATE KEY"]);
   if ([256, 384, 512].includes(hash) == false)
     throw TypeError(`Invalid hash ${hash}`);
