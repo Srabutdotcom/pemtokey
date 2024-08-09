@@ -56,7 +56,7 @@ var keyPair = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-25
  * To extract privateKey from Pem string into cryptoKey Object
  * @param {base64} pem encoded base64 string
  * @param {256|384|512} hash either 256, 384 or 512
- * @returns {Promise<CryptoKey>} a promise that resolve a CryptoKey
+ * @returns {Promise} a promise that resolve a CryptoKey
  */
 async function pem2key(pem, hash = 256)/* :Promise<CryptoKey> */ {
   pem = ensurePem(pem, pemTypes["(RSA |EC )?PRIVATE KEY"]);
