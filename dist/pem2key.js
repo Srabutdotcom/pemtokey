@@ -1,3 +1,4 @@
+/// <reference types="./types/pem2key.d.ts" /> 
 // ../../aid/ensure/ensurePem.js
 var pemTypes = Object.freeze({
   "RSA PRIVATE KEY": "RSA PRIVATE KEY",
