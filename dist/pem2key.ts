@@ -15,7 +15,7 @@ var pemTypes = Object.freeze({
   "(RSA |EC )?PRIVATE KEY": "(RSA |EC )?PRIVATE KEY",
   "(RSA )?PUBLIC KEY": "(RSA )?PUBLIC KEY"
 });
-function ensurePem(pem, type) {
+function ensurePem(pem : string, type: string) {
   pem = ensureString(pem);
   type = ensurePemType(type);
   const test = pemRegex(type).test(pem);
@@ -23,19 +23,19 @@ function ensurePem(pem, type) {
     throw TypeError(`Expected PEM format ${type}`);
   return pem;
 }
-function pemRegex(pemType) {
+function pemRegex(pemType: string) {
   return new RegExp(`^(-----BEGIN ${pemType}-----\r?
 ?(?:[A-Za-z0-9+/=]+\r?
 ?)*-----END ${pemType}-----)\r?
 ?$`);
 }
-function ensurePemType(type) {
+function ensurePemType(type : string) {
   const isTrue = Object.prototype.hasOwnProperty.call(pemTypes, type);
   if (!isTrue)
     throw TypeError(`Unexpected PEM type : ${type}`);
   return type;
 }
-function ensureString(string) {
+function ensureString(string: string) {
   if (typeof string !== "string")
     throw TypeError(`Expected string but got ${typeof string}`);
   return string;
