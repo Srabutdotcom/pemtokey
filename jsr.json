@@ -1,6 +1,6 @@
 {
    "name": "@aicone/pem2key",
-   "version": "0.1.22",
+   "version": "0.1.23",
    "exports": "./dist/pem2key.js",
    "publish": {
     "exclude":[
@@ -10,7 +10,7 @@
    "lint" :{
       "include": ["dist/"],
       "rules" : {
-        "exclude" : ["no-explicit-any"]
+        "exclude" : ["no-var", "no-explicit-any", "no-slow-types"]
       }
    }
  }
