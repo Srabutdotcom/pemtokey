@@ -1,9 +1,11 @@
 //! @preserve deno-lint-ignore-no-var-file
-import { ensurePem, pemTypes } from "./tools/ensurePem.js";
+// @ts-self-types="./pem2key.d.ts"
+//import { ensurePem, pemTypes } from "./tools/ensurePem.js";
 import { Base64 } from "npm:@lapo/asn1js@2.0.4/base64.js"
 import { ASN1 } from "npm:@lapo/asn1js@2.0.4"
 import { Defs } from "npm:@lapo/asn1js@2.0.4/defs.js"
 import * as jose from 'npm:jose@5.6.3'
+import { pem } from "jsr:@aicone/pem"
 
 const keyFormats = Object.freeze({
    'PKCS#8': 'PKCS#8',
@@ -15,14 +17,15 @@ const keyPair = await crypto.subtle.generateKey({name:'ECDSA', namedCurve:'P-256
 /**
  * ! @preserve
  * To extract privateKey from Pem string into cryptoKey Object
- * @param {string} pem encoded base64 string
+ * @param {string} pemstring encoded base64 string
  * @param {256|384|512} hash either 256, 384 or 512
  * @returns {Promise<CryptoKey>} a promise that resolve a CryptoKey
  */
-export async function pem2key(pem, hash = 256) {
-   pem = ensurePem(pem, pemTypes["(RSA |EC )?PRIVATE KEY"])
+export async function pem2key(pemstring, hash = 256) {
+   pemstring = pem(pemstring).privateKey();
+   //pemstring = ensurePem(pemstring, pemTypes["(RSA |EC )?PRIVATE KEY"])
    if ([256, 384, 512].includes(hash) == false) throw TypeError(`Invalid hash ${hash}`)
-   const byte = Base64.unarmor(pem);
+   const byte = Base64.unarmor(pemstring);
    const asn1 = ASN1.decode(byte);
    const key = parseKey(asn1);
    /**
@@ -33,13 +36,13 @@ export async function pem2key(pem, hash = 256) {
    if (key.type == keyFormats["PKCS#8"]) {
       
       if (key.name.includes('ec')) {
-         if (key.alg.includes('384')) { cryptoKey = await jose.importPKCS8(pem, 'ES384'); return cryptoKey }
-         if (key.alg.includes('521')) { cryptoKey = await jose.importPKCS8(pem, 'ES512'); return cryptoKey }
-         if (key.alg == 'secp256k1') { cryptoKey = await jose.importPKCS8(pem, 'ES256K'); return cryptoKey }
-         if (key.alg.includes('256')) { cryptoKey = await jose.importPKCS8(pem, 'ES256'); return cryptoKey }
+         if (key.alg.includes('384')) { cryptoKey = await jose.importPKCS8(pemstring, 'ES384'); return cryptoKey }
+         if (key.alg.includes('521')) { cryptoKey = await jose.importPKCS8(pemstring, 'ES512'); return cryptoKey }
+         if (key.alg == 'secp256k1') { cryptoKey = await jose.importPKCS8(pemstring, 'ES256K'); return cryptoKey }
+         if (key.alg.includes('256')) { cryptoKey = await jose.importPKCS8(pemstring, 'ES256'); return cryptoKey }
          throw TypeError(`Unsupported alg ${key.alg}`)
       }
-      cryptoKey = await jose.importPKCS8(pem, `PS${hash}`)
+      cryptoKey = await jose.importPKCS8(pemstring, `PS${hash}`)
       return cryptoKey
    }
    const jwk = {
@@ -136,7 +139,7 @@ function getUint8(index = 0) {
    }
 }
 
-//`esbuild ./pem2key.js --bundle --format=esm --target=esnext --outfile=../dist/pem2key.js --external:npm:jose* --external:npm:@lapo/* --legal-comments=inline`
+//`esbuild ./pem2key.js --bundle --format=esm --target=esnext --outfile=../dist/pem2key.js --external:npm:jose* --external:npm:@lapo/* --external:jsr:@aicone/pem --legal-comments=inline`
 // deno publish --allow-dirty --allow-slow-types
 // npx -p typescript tsc pem2key.js --declaration --allowJs --emitDeclarationOnly --lib ESNext
 

@@ -1,5 +1,6 @@
 //import { pem2key } from "../src/pem2key.js"
 import { pem2key } from "../dist/pem2key.js"
+import { assertEquals } from "@std/assert"
 
 //*PKCS1
 const RSAPrivateKeyPem = `-----BEGIN RSA PRIVATE KEY-----
@@ -124,3 +125,19 @@ const _d = await pem2key(ecPem256);
 const _a = await pem2key(RSAPrivateKeyPem, 512);
 const _b = await pem2key(RsaSsaPem,384);
 const _c = await pem2key(RsaPssPem);
+
+Deno.test(
+   "ECDSE privateKey",
+   async ()=>{
+      const key = await pem2key(ecPem256);
+      assertEquals({cryptoKey:key instanceof CryptoKey, name: key.algorithm.name, type: key.type}, {cryptoKey: true, name: "ECDSA", type:'private'})
+   }
+)
+
+Deno.test(
+   "RSA PSS privateKey",
+   async ()=>{
+      const key = await pem2key(ecPem256);
+      assertEquals({cryptoKey:key instanceof CryptoKey, name: key.algorithm.name, type: key.type}, {cryptoKey: true, name: "RSA-PSS", type:'private'})
+   }
+)

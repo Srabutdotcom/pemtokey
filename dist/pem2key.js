@@ -1,51 +1,10 @@
 // @ts-self-types="./pem2key.d.ts"
-// ../../aid/ensure/ensurePem.js
-var pemTypes = Object.freeze({
-  "RSA PRIVATE KEY": "RSA PRIVATE KEY",
-  "CERTIFICATE": "CERTIFICATE",
-  "RSA PUBLIC KEY": "RSA PUBLIC KEY",
-  "DSA PRIVATE KEY": "DSA PRIVATE KEY",
-  "PUBLIC KEY": "PUBLIC KEY",
-  "PRIVATE KEY": "PRIVATE KEY",
-  "PKCS7": "PKCS7",
-  "NEW CERTIFICATE REQUEST": "NEW CERTIFICATE REQUEST",
-  "CERTIFICATE REQUEST": "CERTIFICATE REQUEST",
-  "X509 CRL": "X509 CRL",
-  "EC PRIVATE KEY": "EC PRIVATE KEY",
-  "(RSA |EC )?PRIVATE KEY": "(RSA |EC )?PRIVATE KEY",
-  "(RSA )?PUBLIC KEY": "(RSA )?PUBLIC KEY"
-});
-function ensurePem(pem, type) {
-  pem = ensureString(pem);
-  type = ensurePemType(type);
-  const test = pemRegex(type).test(pem);
-  if (test == false)
-    throw TypeError(`Expected PEM format ${type}`);
-  return pem;
-}
-function pemRegex(pemType) {
-  return new RegExp(`^(-----BEGIN ${pemType}-----\r?
-?(?:[A-Za-z0-9+/=]+\r?
-?)*-----END ${pemType}-----)\r?
-?$`);
-}
-function ensurePemType(type) {
-  const isTrue = Object.prototype.hasOwnProperty.call(pemTypes, type);
-  if (!isTrue)
-    throw TypeError(`Unexpected PEM type : ${type}`);
-  return type;
-}
-function ensureString(string) {
-  if (typeof string !== "string")
-    throw TypeError(`Expected string but got ${typeof string}`);
-  return string;
-}
-
 // pem2key.js
 import { Base64 } from "npm:@lapo/asn1js@2.0.4/base64.js";
 import { ASN1 } from "npm:@lapo/asn1js@2.0.4";
 import { Defs } from "npm:@lapo/asn1js@2.0.4/defs.js";
 import * as jose from "npm:jose@5.6.3";
+import { pem } from "jsr:@aicone/pem";
 //! @preserve deno-lint-ignore-no-var-file
 var keyFormats = Object.freeze({
   "PKCS#8": "PKCS#8",
@@ -55,15 +14,15 @@ var keyPair = await crypto.subtle.generateKey({ name: "ECDSA", namedCurve: "P-25
 /**
  * ! @preserve
  * To extract privateKey from Pem string into cryptoKey Object
- * @param {string} pem encoded base64 string
+ * @param {string} pemstring encoded base64 string
  * @param {256|384|512} hash either 256, 384 or 512
- * @return {Promise<CryptoKey>} a promise that resolve a CryptoKey
+ * @returns {Promise<CryptoKey>} a promise that resolve a CryptoKey
  */
-async function pem2key(pem, hash = 256) {
-  pem = ensurePem(pem, pemTypes["(RSA |EC )?PRIVATE KEY"]);
+async function pem2key(pemstring, hash = 256) {
+  pemstring = pem(pemstring).privateKey();
   if ([256, 384, 512].includes(hash) == false)
     throw TypeError(`Invalid hash ${hash}`);
-  const byte = Base64.unarmor(pem);
+  const byte = Base64.unarmor(pemstring);
   const asn1 = ASN1.decode(byte);
   const key = parseKey(asn1);
   /**
@@ -73,24 +32,24 @@ async function pem2key(pem, hash = 256) {
   if (key.type == keyFormats["PKCS#8"]) {
     if (key.name.includes("ec")) {
       if (key.alg.includes("384")) {
-        cryptoKey = await jose.importPKCS8(pem, "ES384");
+        cryptoKey = await jose.importPKCS8(pemstring, "ES384");
         return cryptoKey;
       }
       if (key.alg.includes("521")) {
-        cryptoKey = await jose.importPKCS8(pem, "ES512");
+        cryptoKey = await jose.importPKCS8(pemstring, "ES512");
         return cryptoKey;
       }
       if (key.alg == "secp256k1") {
-        cryptoKey = await jose.importPKCS8(pem, "ES256K");
+        cryptoKey = await jose.importPKCS8(pemstring, "ES256K");
         return cryptoKey;
       }
       if (key.alg.includes("256")) {
-        cryptoKey = await jose.importPKCS8(pem, "ES256");
+        cryptoKey = await jose.importPKCS8(pemstring, "ES256");
         return cryptoKey;
       }
       throw TypeError(`Unsupported alg ${key.alg}`);
     }
-    cryptoKey = await jose.importPKCS8(pem, `PS${hash}`);
+    cryptoKey = await jose.importPKCS8(pemstring, `PS${hash}`);
     return cryptoKey;
   }
   const jwk = {
