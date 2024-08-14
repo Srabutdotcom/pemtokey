@@ -1,3 +1,4 @@
+// @ts-self-types="./pem2key.d.ts"
 // pem2key.js
 import { Base64 } from "npm:@lapo/asn1js@2.0.4/base64.js";
 import { ASN1 } from "npm:@lapo/asn1js@2.0.4";
