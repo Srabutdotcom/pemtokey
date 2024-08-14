@@ -5,7 +5,7 @@ import { Base64 } from "npm:@lapo/asn1js@2.0.4/base64.js"
 import { ASN1 } from "npm:@lapo/asn1js@2.0.4"
 import { Defs } from "npm:@lapo/asn1js@2.0.4/defs.js"
 import * as jose from 'npm:jose@5.6.3'
-import { pem } from "jsr:@aicone/pem"
+import { pem } from "jsr:@aicone/pem@0.1.3"
 
 const keyFormats = Object.freeze({
    'PKCS#8': 'PKCS#8',
@@ -139,7 +139,7 @@ function getUint8(index = 0) {
    }
 }
 
-//`esbuild ./pem2key.js --bundle --format=esm --target=esnext --outfile=../dist/pem2key.js --external:npm:jose* --external:npm:@lapo/* --external:jsr:@aicone/pem --legal-comments=inline`
+//`esbuild ./pem2key.js --bundle --format=esm --target=esnext --outfile=../dist/pem2key.js --external:npm:jose* --external:npm:@lapo/* --external:jsr:@aicone/pem* --legal-comments=inline`
 // deno publish --allow-dirty --allow-slow-types
 // npx -p typescript tsc pem2key.js --declaration --allowJs --emitDeclarationOnly --lib ESNext
 

@@ -1,8 +1,7 @@
 /**
- * ! @preserve
  * To extract privateKey from Pem string into cryptoKey Object
- * @param {string} pem encoded base64 string
+ * @param {string} pemstring encoded base64 string
  * @param {256|384|512} hash either 256, 384 or 512
- * @return {Promise<CryptoKey>} a promise that resolve a CryptoKey
+ * @returns {Promise<CryptoKey>} a promise that resolve a CryptoKey
  */
-export function pem2key(pem: string, hash?: 256 | 384 | 512): Promise<CryptoKey>;
+export function pem2key(pemstring: string, hash?: 256 | 384 | 512): Promise<CryptoKey>;

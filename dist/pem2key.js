@@ -1,10 +1,9 @@
-// @ts-self-types="./pem2key.d.ts"
 // pem2key.js
 import { Base64 } from "npm:@lapo/asn1js@2.0.4/base64.js";
 import { ASN1 } from "npm:@lapo/asn1js@2.0.4";
 import { Defs } from "npm:@lapo/asn1js@2.0.4/defs.js";
 import * as jose from "npm:jose@5.6.3";
-import { pem } from "jsr:@aicone/pem";
+import { pem } from "jsr:@aicone/pem@0.1.3";
 //! @preserve deno-lint-ignore-no-var-file
 var keyFormats = Object.freeze({
   "PKCS#8": "PKCS#8",
