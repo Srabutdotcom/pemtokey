@@ -137,7 +137,7 @@ Deno.test(
 Deno.test(
    "RSA PSS privateKey",
    async ()=>{
-      const key = await pem2key(ecPem256);
+      const key = await pem2key(RsaSsaPem);
       assertEquals({cryptoKey:key instanceof CryptoKey, name: key.algorithm.name, type: key.type}, {cryptoKey: true, name: "RSA-PSS", type:'private'})
    }
 )
