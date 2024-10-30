@@ -2,14 +2,6 @@
 
 A Deno module for extracting private keys from PEM strings and converting them into `CryptoKey` objects suitable for cryptographic operations.
 
-## Installation
-
-To add the `pem2key` package to your Deno project, run the following command:
-
-```bash
-deno add jsr:@aicone/pem2key
-```
-
 ## Usage
 
 You can use the `pem2key` function to extract a private key from a PEM string and convert it to a `CryptoKey` object. The function supports various hash algorithms (256, 384, and 512).
